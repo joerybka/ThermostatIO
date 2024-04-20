@@ -1,5 +1,5 @@
 #include "settings.h"
-#include "Modes.h"
+#include "ThermostatModes.h"
 #include "Debouncer.h"
 
 #ifndef SETTINGSCONTROLLER_H

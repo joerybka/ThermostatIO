@@ -1,4 +1,4 @@
-#include "Modes.h"
+#include "ThermostatModes.h"
 #include "SettingsController.h"
 
 float SettingsController::SetHeatTempC() { return _setHeatTempC; }
