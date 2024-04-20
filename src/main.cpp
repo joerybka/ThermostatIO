@@ -4,6 +4,7 @@
 
 #include "settings.h"
 #include "Debouncer.h"
+#include "StableDebouncer.h"
 #include "SettingsController.h"
 #include "SensorController.h"
 #include "HvacController.h"

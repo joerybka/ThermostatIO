@@ -1,6 +1,7 @@
 #include "settings.h"
 #include "ThermostatModes.h"
 #include "Debouncer.h"
+#include "StableDebouncer.h"
 
 #ifndef SETTINGSCONTROLLER_H
 #define SETTINGSCONTROLLER_H
@@ -10,7 +11,12 @@ class SettingsController {
   private: 
     Debouncer _incrementBouncer;
     Debouncer _decrementBouncer;
-    Debouncer _setHeatModeBouncer = Debouncer();
+    StableDebouncer _setHeatModeBouncer = StableDebouncer();
+
+    /**
+     * The default number of milliseconds to bounce a button
+     */
+    static constexpr unsigned long DefaultButtonBounceMs = 500;  // .5 seconds
 
     /// @brief The temperature target for heating mode when the thermostat is in celcius mode
     float _setHeatTempC = defaultHeatTempC;
@@ -94,10 +100,22 @@ class SettingsController {
     /// @return The string value of the heat mode
     const char* GetHeatModeString();
 
+    /**
+     * Initialize any internal tracking states with defaults
+     */
+    SettingsController();
+
     /// @brief A controller for handling settings 
-    /// @param incrementBounceMs 
-    /// @param decrementBounceMs 
+    /// @param incrementBounceMs The number of milliseconds to bounce between increment button presses
+    /// @param decrementBounceMs The number of milliseconds to bounce between decrement button presses
     SettingsController(unsigned long incrementBounceMs, unsigned long decrementBounceMs);
+
+    /**
+     * Pass in the actual debouncers to be used instead of default bounce delays
+     * @param incrementBouncer The debouncer for incrementing settings
+     * @param decrementBouncer The debouncer for decrementing settings
+     */
+    SettingsController(Debouncer incrementBouncer, Debouncer decrementBouncer);
 
     /// @brief Increment the set temperature of the current HVAC mode
     void IncrementSetTempC();

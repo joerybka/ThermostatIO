@@ -1,5 +1,6 @@
 #include "ThermostatModes.h"
 #include "Debouncer.h"
+#include "StableDebouncer.h"
 #include "SettingsController.h"
 
 float SettingsController::SetHeatTempC() { return _setHeatTempC; }
@@ -19,8 +20,20 @@ const char* SettingsController::GetHeatModeString() {
   }
 }
 
-SettingsController::SettingsController(unsigned long incrementBounceMs, unsigned long decrementBounceMs) 
-: _incrementBouncer(Debouncer(incrementBounceMs)), _decrementBouncer(Debouncer(decrementBounceMs)) { }
+SettingsController::SettingsController()
+  : SettingsController(DefaultButtonBounceMs, DefaultButtonBounceMs) { }
+
+SettingsController::SettingsController(unsigned long incrementBounceMs, unsigned long decrementBounceMs)
+ : SettingsController(Debouncer(incrementBounceMs), Debouncer(decrementBounceMs)) {
+
+}
+
+SettingsController::SettingsController(Debouncer incrementBouncer, Debouncer decrementBouncer)
+ : _incrementBouncer(incrementBouncer), _decrementBouncer(decrementBouncer) {
+    _setHeatModeBouncer.SetStickyBounce(true);
+    _setHeatModeBouncer.SetStartBounceDelay(10);
+    _setHeatModeBouncer.SetBounceResetCooldown(10);
+}
 
 void SettingsController::IncrementSetTempC() {
   auto wrapper = [this]() { _incrementSetTempC(); };
@@ -34,7 +47,7 @@ void SettingsController::DecrementSetTempC() {
 
 void SettingsController::ToggleHeatMode() {
   auto wrapper = [this]() { _heatModeToggle(); };
-  _setHeatModeBouncer.PermaBounce(wrapper);
+  _setHeatModeBouncer.Bounce(wrapper);
 }
 
 void SettingsController::LoopHandler() {
