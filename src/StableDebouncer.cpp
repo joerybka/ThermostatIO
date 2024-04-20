@@ -4,9 +4,7 @@
 
 #include "StableDebouncer.h"
 
-StableDebouncer::StableDebouncer() {
-    _bounceMs = DefaultDebounceMilliseconds;
-}
+StableDebouncer::StableDebouncer() : StableDebouncer(DefaultDebounceMilliseconds) { }
 
 StableDebouncer::StableDebouncer(unsigned long bounceMs) {
     _bounceMs = bounceMs;
@@ -21,7 +19,7 @@ void StableDebouncer::SetBounceResetCooldown(unsigned long bounceResetCooldownMs
 }
 
 void StableDebouncer::SetStickyBounce(bool stickyBounce) {
-    _stickyBounce = stickyBounce;
+    _isStickyBounce = stickyBounce;
 }
 
 void StableDebouncer::Reset() {

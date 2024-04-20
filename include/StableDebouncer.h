@@ -14,7 +14,7 @@
  */
 class StableDebouncer {
 public:
-    const unsigned long DefaultDebounceMilliseconds = 1000;  // 1 second
+    static constexpr unsigned long DefaultDebounceMilliseconds = 1000;  // 1 second
 
     /**
      * Constructor for full default configuration
@@ -69,14 +69,31 @@ public:
     void Reset();
 
 private:
+    /// State flag to indicate that the debouncer is currently tracking bouncing activity
     bool _isBouncing = false;
-    unsigned long _bounceStartMs = 0;
-    unsigned long _lastBounceExecutionMs = 0;
+
+    /// State flag to indicate that the debouncer has executed something with the bouncing behavior
     bool _isExecuted = false;
-    bool _stickyBounce = false;
+
+    /// State flag to indicate that the debouncer is in sticky mode, and will only execute the debounced function once per reset
+    bool _isStickyBounce = false;
+
+    /// The time at which the last debounce activity started
+    unsigned long _bounceStartMs = 0;
+
+    /// The time at which the last execution of the debounced request took place
+    unsigned long _lastBounceExecutionMs = 0;
+
+    /// The time at which this debouncer was last reset
     unsigned long _lastResetMs = 0;
+
+    /// The length of time to wait between debounced function invocations
     unsigned long _bounceMs = DefaultDebounceMilliseconds;
+
+    /// The length of time to wait at the start of a debounce cycle to execute the debounced function
     unsigned long _bounceStartDelayMs = 0;
+
+    /// The length of time after the debouncer is reset after having executed something to start any new debouncing activity
     unsigned long _bounceResetCooldownMs = 0;
 
     /**
@@ -100,7 +117,7 @@ private:
      */
     bool _shouldExecute() const {
         if(!_isBouncing) return false;  // bouncing is not enabled
-        if(_isExecuted && _stickyBounce) return false;  // we have already executed after the last reset
+        if(_isExecuted && _isStickyBounce) return false;  // we have already executed after the last reset
         if((millis() - _bounceStartMs) < _bounceStartDelayMs) return false;  // we are still in the initial delay
         if((millis() - _lastBounceExecutionMs) < _bounceMs) return false;  // our last execution was within the bounce timeout
         return true;  // otherwise go for it!
@@ -120,12 +137,12 @@ private:
      * will be updated with the current millis stamp.
      */
     void _reset() {
+        if(_isExecuted) _lastResetMs = millis();
+
         _isBouncing = false;
         _isExecuted = false;
         _bounceStartMs = 0;
         _lastBounceExecutionMs = 0;
-
-        _lastResetMs = millis();
     }
 };
 
