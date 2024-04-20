@@ -8,9 +8,9 @@
 /// @brief Controller to manage tracking settings in the thermostat
 class SettingsController {
   private: 
-    Debouncer _incrementBouncer = Debouncer(buttonDebounceMs);
-    Debouncer _decrementBouncer = Debouncer(buttonDebounceMs);
-    Debouncer _setHeatModeBouncer = Debouncer(buttonDebounceMs);
+    Debouncer _incrementBouncer;
+    Debouncer _decrementBouncer;
+    Debouncer _setHeatModeBouncer = Debouncer();
 
     /// @brief The temperature target for heating mode when the thermostat is in celcius mode
     float _setHeatTempC = defaultHeatTempC;
@@ -93,6 +93,11 @@ class SettingsController {
     /// @brief Accessor for a string representation of the current heat mode
     /// @return The string value of the heat mode
     const char* GetHeatModeString();
+
+    /// @brief A controller for handling settings 
+    /// @param incrementBounceMs 
+    /// @param decrementBounceMs 
+    SettingsController(unsigned long incrementBounceMs, unsigned long decrementBounceMs);
 
     /// @brief Increment the set temperature of the current HVAC mode
     void IncrementSetTempC();
