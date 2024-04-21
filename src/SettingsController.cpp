@@ -3,9 +3,9 @@
 #include "StableDebouncer.h"
 #include "SettingsController.h"
 
-float SettingsController::SetHeatTempC() { return _setHeatTempC; }
+float SettingsController::SetHeatTempC() const { return _setHeatTempC; }
 
-float SettingsController::SetCoolTempC() { return _setCoolTempC; }
+float SettingsController::SetCoolTempC() const { return _setCoolTempC; }
 
 ThermostatTemperatureMode SettingsController::CurrentTempMode() { return _tempMode; }
 
@@ -24,15 +24,17 @@ SettingsController::SettingsController()
   : SettingsController(DefaultButtonBounceMs, DefaultButtonBounceMs) { }
 
 SettingsController::SettingsController(unsigned long incrementBounceMs, unsigned long decrementBounceMs)
- : SettingsController(Debouncer(incrementBounceMs), Debouncer(decrementBounceMs)) {
-
-}
+ : SettingsController(Debouncer(incrementBounceMs), Debouncer(decrementBounceMs)) { }
 
 SettingsController::SettingsController(Debouncer incrementBouncer, Debouncer decrementBouncer)
  : _incrementBouncer(incrementBouncer), _decrementBouncer(decrementBouncer) {
     _setHeatModeBouncer.SetStickyBounce(true);
     _setHeatModeBouncer.SetStartBounceDelay(10);
     _setHeatModeBouncer.SetBounceResetCooldown(10);
+}
+
+void SettingsController::Initialize() {
+    _upButton.Initialize();
 }
 
 void SettingsController::IncrementSetTempC() {
@@ -51,7 +53,7 @@ void SettingsController::ToggleHeatMode() {
 }
 
 void SettingsController::LoopHandler() {
-  if(digitalRead(PIN_BUTTON_UP)){
+  if(_upButton.IsOn()){
     IncrementSetTempC();
   } 
   else {

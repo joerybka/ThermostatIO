@@ -2,6 +2,7 @@
 #include "ThermostatModes.h"
 #include "Debouncer.h"
 #include "StableDebouncer.h"
+#include "PinController.h"
 
 #ifndef SETTINGSCONTROLLER_H
 #define SETTINGSCONTROLLER_H
@@ -12,6 +13,7 @@ class SettingsController {
     Debouncer _incrementBouncer;
     Debouncer _decrementBouncer;
     StableDebouncer _setHeatModeBouncer = StableDebouncer();
+    PinController _upButton = PinController(PIN_BUTTON_UP, INPUT);
 
     /**
      * The default number of milliseconds to bounce a button
@@ -82,11 +84,11 @@ class SettingsController {
   public:
     /// @brief Getter for the current temperature target in heat mode in celcius mode
     /// @return The current temperature target in celcius
-    float SetHeatTempC();
+    float SetHeatTempC() const;
 
     /// @brief Getter for the current temperature target in cooling mode in celcius mode
     /// @return The current temperature target in celcius
-    float SetCoolTempC();
+    float SetCoolTempC() const;
 
     /// @brief Getter for the current temperature mode
     /// @return Farenheit or celcius
@@ -116,6 +118,11 @@ class SettingsController {
      * @param decrementBouncer The debouncer for decrementing settings
      */
     SettingsController(Debouncer incrementBouncer, Debouncer decrementBouncer);
+
+    /**
+     * Initialize the settings of any internal states
+     */
+    void Initialize();
 
     /// @brief Increment the set temperature of the current HVAC mode
     void IncrementSetTempC();

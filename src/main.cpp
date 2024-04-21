@@ -49,6 +49,7 @@ void setup() {
 
   // run any initializers
   sensorController.Initialize();
+  settingsController.Initialize();
 
   // print starting status to the console
   Serial.print(sensorController.Sensor().readStatus(), HEX);
