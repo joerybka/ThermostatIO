@@ -1,4 +1,3 @@
-#include "settings.h"
 #include "ThermostatModes.h"
 #include "Debouncer.h"
 #include "StableDebouncer.h"
@@ -13,21 +12,18 @@ class SettingsController {
     Debouncer _incrementBouncer;
     Debouncer _decrementBouncer;
     StableDebouncer _setHeatModeBouncer = StableDebouncer();
-    PinController _upButton = PinController(PIN_BUTTON_UP, INPUT);
-
-    /**
-     * The default number of milliseconds to bounce a button
-     */
-    static constexpr unsigned long DefaultButtonBounceMs = 500;  // .5 seconds
+    PinController _upButton;
+    PinController _downButton;
+    PinController _modeButton;
 
     /// @brief The temperature target for heating mode when the thermostat is in celcius mode
-    float _setHeatTempC = defaultHeatTempC;
+    float _setHeatTempC = 21.0;
 
     /// @brief The temperature target for cooling mode when the thermostat is in celcius mode
-    float _setCoolTempC = defaultCoolTempC;
+    float _setCoolTempC = 21.0;
 
     /// @brief The amount to increment temperature settings by when in celcius mode
-    float _tempIncrementC = tempIncrementC;
+    float _tempIncrementC = 0.5;
 
     /// @brief The current temperatur display mode
     ThermostatTemperatureMode _tempMode = C;
@@ -103,21 +99,15 @@ class SettingsController {
     const char* GetHeatModeString();
 
     /**
-     * Initialize any internal tracking states with defaults
-     */
-    SettingsController();
-
-    /// @brief A controller for handling settings 
-    /// @param incrementBounceMs The number of milliseconds to bounce between increment button presses
-    /// @param decrementBounceMs The number of milliseconds to bounce between decrement button presses
-    SettingsController(unsigned long incrementBounceMs, unsigned long decrementBounceMs);
-
-    /**
      * Pass in the actual debouncers to be used instead of default bounce delays
      * @param incrementBouncer The debouncer for incrementing settings
      * @param decrementBouncer The debouncer for decrementing settings
+     * @param upButtonController The controller for the up button
+     * @param downButtonController The controller for the down button
+     * @param modeButtonController The controller for the mode button
      */
-    SettingsController(Debouncer incrementBouncer, Debouncer decrementBouncer);
+    SettingsController(Debouncer incrementBouncer, Debouncer decrementBouncer, PinController upButtonController,
+                       PinController downButtonController, PinController modeButtonController);
 
     /**
      * Initialize the settings of any internal states

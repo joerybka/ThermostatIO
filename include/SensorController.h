@@ -45,7 +45,7 @@ class SensorController {
     SensorController(unsigned long sensorReadBounceMs);
 
     /// Initializer with specified settings
-    void Initialize(int sda_pin, int scl_pin, uint32_t clock);
+    void Initialize(int sdaPin, int sclPin, uint32_t clock);
 
     /// @brief Handler for executing looping behavior
     void LoopHandler();

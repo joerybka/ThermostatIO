@@ -20,19 +20,25 @@ class HvacController {
   /// @brief Flag for if the fan is on
   bool _isFanOn = false;
 
+  int _pinCool;
+  int _pinHeat;
+  int _pinFan;
+
+  const float _hvacOnBufferC = 0.5;
+
   /// @brief private setter for the cooling system relay
   void _setCoolRelay() {
-    digitalWrite(PIN_LED_COOL, _isCoolOn ? HIGH : LOW);
+    digitalWrite(_pinCool, _isCoolOn ? HIGH : LOW);
   }
 
   /// @brief Private setter for the heating system relay
   void _setHeatRelay() {
-    digitalWrite(PIN_LED_HEAT, _isHeatOn ? HIGH : LOW);
+    digitalWrite(_pinHeat, _isHeatOn ? HIGH : LOW);
   }
 
   /// @brief Private setter for the fan
   void _setFanRelay() {
-    digitalWrite(PIN_LED_FAN, _isFanOn ? HIGH : LOW);
+    digitalWrite(_pinFan, _isFanOn ? HIGH : LOW);
   }
 
   /// @brief Private trigger for setting all relays at once
@@ -55,11 +61,11 @@ class HvacController {
   void _setHvacHeatStates(SensorController & sensorController, SettingsController & settingsController) {
     _isCoolOn = false;
 
-    if(sensorController.CurrentTempC() >= (settingsController.SetHeatTempC() + hvacOnBufferC)) {
+    if(sensorController.CurrentTempC() >= (settingsController.SetHeatTempC() + _hvacOnBufferC)) {
       _isHeatOn = false;
       _isFanOn = false;
     }
-    else if(sensorController.CurrentTempC() <= (settingsController.SetHeatTempC() - hvacOnBufferC)) {
+    else if(sensorController.CurrentTempC() <= (settingsController.SetHeatTempC() - _hvacOnBufferC)) {
       _isHeatOn = true;
       _isFanOn = true;
     }
@@ -71,11 +77,11 @@ class HvacController {
   void _setHvacCoolStates(SensorController & sensorController, SettingsController & settingsController) {
     _isHeatOn = false;
 
-    if(sensorController.CurrentTempC() <= (settingsController.SetCoolTempC() - hvacOnBufferC)) {
+    if(sensorController.CurrentTempC() <= (settingsController.SetCoolTempC() - _hvacOnBufferC)) {
       _isCoolOn = false;
       _isFanOn = false;
     }
-    else if(sensorController.CurrentTempC() >= (settingsController.SetCoolTempC() + hvacOnBufferC)) {
+    else if(sensorController.CurrentTempC() >= (settingsController.SetCoolTempC() + _hvacOnBufferC)) {
       _isCoolOn = true;
       _isFanOn = true;
     }
@@ -104,7 +110,7 @@ class HvacController {
   public:
     /// @brief Controller for the HVAC relays
     /// @param hvacChangeBounceMs The number of milliseconds between changes to the HVAC equipment, be careful not to set this too low
-    HvacController(unsigned long hvacChangeBounceMs);
+    HvacController(unsigned long hvacChangeBounceMs, int coolPin, int heatPin, int fanPin);
 
     /// @brief Loop handler for HVAC behaviors
     /// @param sensorController The sensor controller to read from to get current external readings

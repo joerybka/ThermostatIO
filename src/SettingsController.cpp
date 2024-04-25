@@ -20,14 +20,11 @@ const char* SettingsController::GetHeatModeString() {
   }
 }
 
-SettingsController::SettingsController()
-  : SettingsController(DefaultButtonBounceMs, DefaultButtonBounceMs) { }
-
-SettingsController::SettingsController(unsigned long incrementBounceMs, unsigned long decrementBounceMs)
- : SettingsController(Debouncer(incrementBounceMs), Debouncer(decrementBounceMs)) { }
-
-SettingsController::SettingsController(Debouncer incrementBouncer, Debouncer decrementBouncer)
- : _incrementBouncer(incrementBouncer), _decrementBouncer(decrementBouncer) {
+SettingsController::SettingsController(Debouncer incrementBouncer, Debouncer decrementBouncer,
+                                       PinController upButtonController, PinController downButtonController,
+                                       PinController modeButtonController)
+ : _incrementBouncer(incrementBouncer), _decrementBouncer(decrementBouncer), _upButton(upButtonController),
+   _downButton(downButtonController), _modeButton(modeButtonController) {
     _setHeatModeBouncer.SetStickyBounce(true);
     _setHeatModeBouncer.SetStartBounceDelay(10);
     _setHeatModeBouncer.SetBounceResetCooldown(10);
@@ -35,6 +32,8 @@ SettingsController::SettingsController(Debouncer incrementBouncer, Debouncer dec
 
 void SettingsController::Initialize() {
     _upButton.Initialize();
+    _downButton.Initialize();
+    _modeButton.Initialize();
 }
 
 void SettingsController::IncrementSetTempC() {
@@ -60,14 +59,14 @@ void SettingsController::LoopHandler() {
     _incrementBouncer.Reset();
   }
   
-  if(digitalRead(PIN_BUTTON_DOWN)) {
+  if(_downButton.IsOn()) {
     DecrementSetTempC();
   }
   else {
     _decrementBouncer.Reset();
   }
 
-  if(digitalRead(PIN_HEAT_MODE_TOGGLE)) {
+  if(_modeButton.IsOn()) {
     ToggleHeatMode();
   }
   else {

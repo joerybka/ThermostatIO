@@ -2,12 +2,15 @@
 #include "Wire.h"
 #include "SHT31.h"
 
-#include "settings.h"
 #include "Debouncer.h"
 #include "StableDebouncer.h"
 #include "SettingsController.h"
 #include "SensorController.h"
 #include "HvacController.h"
+
+/* **************************
+ * Settings
+ */
 
 #ifdef ESP32_S2_DEV
 #define PIN_I2C_SCL 18
@@ -52,10 +55,40 @@
 #define PIN_LED_FAN 6
 #endif
 
+/// @brief The increment of an up/down button press in celcius mode
+const float tempIncrementC = 0.5;
+
+/// @brief The default temperature setting for heating in celcius mode
+const float defaultHeatTempC = 21.0;
+
+/// @brief the default temperature setting for cooling in celcius mode
+const float defaultCoolTempC = 21.0;
+
+/// @brief the amount to over cool or over heat in celcius mode, helps to prevent too many on/off events
+const float hvacOnBufferC = 0.5;
+
+/// @brief The time in milliseconds to wait between HVAC relay state changes, do not set this too low, or you could damage the equipment
+const unsigned long hvacChangeDebounceMs = 5000;  // 5 seconds
+
+/// @brief The time in milliseconds to wait between writing status information to the serial console
+const unsigned long writeDebounceMs = 1000;  // 1 second
+
+/// @brief The time in milliseconds to execute the button action on a continuous press
+const unsigned long buttonDebounceMs = 1000;  // 1 second
+
+/// @brief The time in milliseconds between reads of the temperature sensor
+const unsigned long sensorReadBounceMs = 500;  // .5 seconds
+
+/* *************************************
+ * End settings
+ */
+
 // controllers
-SettingsController settingsController = SettingsController(buttonDebounceMs, buttonDebounceMs);
+SettingsController settingsController = SettingsController(
+        buttonDebounceMs, buttonDebounceMs, PinController(PIN_BUTTON_UP, INPUT),
+        PinController(PIN_BUTTON_DOWN, INPUT), PinController(PIN_HEAT_MODE_TOGGLE, INPUT));
 SensorController sensorController = SensorController(sensorReadBounceMs);
-HvacController hvacController = HvacController(hvacChangeDebounceMs);
+HvacController hvacController = HvacController(hvacChangeDebounceMs, PIN_LED_COOL, PIN_LED_HEAT, PIN_LED_FAN);
 
 /// @brief debouncer to control the frequency of writing to the serial console
 Debouncer writeDebouncer = Debouncer(writeDebounceMs);
