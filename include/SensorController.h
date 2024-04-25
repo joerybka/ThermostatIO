@@ -30,11 +30,11 @@ class SensorController {
   public:
     /// @brief Getter of the current temperature
     /// @return The last read temperature in celcius
-    float CurrentTempC();
+    float CurrentTempC() const;
 
     /// @brief Getter of the current relative humidity
     /// @return The last read humidity in relative percent
-    float CurrentHumidityRel();
+    float CurrentHumidityRel() const;
 
     /// @brief The current sensor object being managed by this object
     /// @return The SHT31 sensor
@@ -44,8 +44,8 @@ class SensorController {
     /// @param sensorReadBounceMs The number of milliseconds to wait between reads of the sensor
     SensorController(unsigned long sensorReadBounceMs);
 
-    /// @brief Initializer for the sensor hardware
-    void Initialize();
+    /// Initializer with specified settings
+    void Initialize(int sda_pin, int scl_pin, uint32_t clock);
 
     /// @brief Handler for executing looping behavior
     void LoopHandler();

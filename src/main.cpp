@@ -9,6 +9,49 @@
 #include "SensorController.h"
 #include "HvacController.h"
 
+#ifdef ESP32_S2_DEV
+#define PIN_I2C_SCL 18
+#define PIN_I2C_SDA 21
+
+#define PIN_BUTTON_UP 39
+#define PIN_BUTTON_DOWN 40
+#define PIN_TEMP_MODE_TOGGLE 37
+#define PIN_HEAT_MODE_TOGGLE 38
+
+// outputs
+#define PIN_LED_HEAT 4
+#define PIN_LED_COOL 5
+#define PIN_LED_FAN 6
+
+#elif SEEED
+#define PIN_I2C_SCL 5
+#define PIN_I2C_SDA 4
+
+#define PIN_BUTTON_UP 10
+#define PIN_BUTTON_DOWN 9
+#define PIN_TEMP_MODE_TOGGLE 8
+#define PIN_HEAT_MODE_TOGGLE 7
+
+// outputs
+#define PIN_LED_HEAT 0
+#define PIN_LED_COOL 1
+#define PIN_LED_FAN 2
+
+#else
+#define PIN_I2C_SCL 3
+#define PIN_I2C_SDA 2
+
+#define PIN_BUTTON_UP 21
+#define PIN_BUTTON_DOWN 20
+#define PIN_TEMP_MODE_TOGGLE 19
+#define PIN_HEAT_MODE_TOGGLE 18
+
+// outputs
+#define PIN_LED_HEAT 4
+#define PIN_LED_COOL 5
+#define PIN_LED_FAN 6
+#endif
+
 // controllers
 SettingsController settingsController = SettingsController(buttonDebounceMs, buttonDebounceMs);
 SensorController sensorController = SensorController(sensorReadBounceMs);
@@ -48,7 +91,7 @@ void setup() {
   Serial.println(SHT31_LIB_VERSION);
 
   // run any initializers
-  sensorController.Initialize();
+  sensorController.Initialize(PIN_I2C_SDA, PIN_I2C_SCL, 100000);
   settingsController.Initialize();
 
   // print starting status to the console

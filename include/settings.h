@@ -3,17 +3,6 @@
 
 #define SHT31_ADDRESS 0x44
 
-// inputs
-#define PIN_BUTTON_UP 21
-#define PIN_BUTTON_DOWN 20
-#define PIN_TEMP_MODE_TOGGLE 19
-#define PIN_HEAT_MODE_TOGGLE 18
-
-// outputs
-#define PIN_LED_HEAT 4
-#define PIN_LED_COOL 5
-#define PIN_LED_FAN 6
-
 /// @brief The increment of an up/down button press in celcius mode
 extern const float tempIncrementC;
 
