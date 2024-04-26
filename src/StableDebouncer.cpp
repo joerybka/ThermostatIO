@@ -6,8 +6,8 @@
 
 StableDebouncer::StableDebouncer() : StableDebouncer(DefaultFrequencyMilliseconds) { }
 
-StableDebouncer::StableDebouncer(unsigned long frequencyMs) {
-    _frequencyMs = frequencyMs;
+StableDebouncer::StableDebouncer(unsigned long executeFrequencyMs) {
+  _executeFrequencyMs = executeFrequencyMs;
 }
 
 void StableDebouncer::SetStartDelay(unsigned long startDelayMs) {
@@ -18,8 +18,8 @@ void StableDebouncer::SetStopDelay(unsigned long stopDelayMs) {
     _debounceStopExecuteDelayMs = stopDelayMs;
 }
 
-void StableDebouncer::SetResetCooldown(unsigned long bounceResetCooldownMs) {
-    _bounceResetCooldownMs = bounceResetCooldownMs;
+void StableDebouncer::SetResetCooldown(unsigned long debounceResetCooldownMs) {
+  _debounceResetCooldownMs = debounceResetCooldownMs;
 }
 
 void StableDebouncer::SetStickyBounce(bool stickyBounce) {
