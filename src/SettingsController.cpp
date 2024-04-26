@@ -20,14 +20,15 @@ const char* SettingsController::GetHeatModeString() {
   }
 }
 
-SettingsController::SettingsController(Debouncer incrementBouncer, Debouncer decrementBouncer,
+SettingsController::SettingsController(StableDebouncer incrementBouncer, StableDebouncer decrementBouncer,
                                        PinController upButtonController, PinController downButtonController,
                                        PinController modeButtonController)
  : _incrementBouncer(incrementBouncer), _decrementBouncer(decrementBouncer), _upButton(upButtonController),
    _downButton(downButtonController), _modeButton(modeButtonController) {
     _setHeatModeBouncer.SetStickyBounce(true);
-    _setHeatModeBouncer.SetStartBounceDelay(10);
-    _setHeatModeBouncer.SetBounceResetCooldown(10);
+    _setHeatModeBouncer.SetStartDelay(10);
+//    _setHeatModeBouncer.SetStopDelay(10);
+    _setHeatModeBouncer.SetResetCooldown(10);
 }
 
 void SettingsController::Initialize() {
@@ -38,17 +39,17 @@ void SettingsController::Initialize() {
 
 void SettingsController::IncrementSetTempC() {
   auto wrapper = [this]() { _incrementSetTempC(); };
-  _incrementBouncer.Bounce(wrapper);
+  _incrementBouncer.Execute(wrapper);
 }
 
 void SettingsController::DecrementSetTempC() {
   auto wrapper = [this]() { _decrementSetTempC(); };
-  _decrementBouncer.Bounce(wrapper);
+  _decrementBouncer.Execute(wrapper);
 }
 
 void SettingsController::ToggleHeatMode() {
   auto wrapper = [this]() { _heatModeToggle(); };
-  _setHeatModeBouncer.Bounce(wrapper);
+    _setHeatModeBouncer.Execute(wrapper);
 }
 
 void SettingsController::LoopHandler() {

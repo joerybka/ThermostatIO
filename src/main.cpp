@@ -85,8 +85,9 @@ const unsigned long sensorReadBounceMs = 500;  // .5 seconds
 
 // controllers
 SettingsController settingsController = SettingsController(
-        buttonDebounceMs, buttonDebounceMs, PinController(PIN_BUTTON_UP, INPUT),
-        PinController(PIN_BUTTON_DOWN, INPUT), PinController(PIN_HEAT_MODE_TOGGLE, INPUT));
+        StableDebouncer(buttonDebounceMs), StableDebouncer(buttonDebounceMs),
+        PinController(PIN_BUTTON_UP, INPUT),PinController(PIN_BUTTON_DOWN, INPUT),
+        PinController(PIN_HEAT_MODE_TOGGLE, INPUT));
 SensorController sensorController = SensorController(sensorReadBounceMs);
 HvacController hvacController = HvacController(hvacChangeDebounceMs, PIN_LED_COOL, PIN_LED_HEAT, PIN_LED_FAN);
 

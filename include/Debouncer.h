@@ -30,7 +30,7 @@ class Debouncer {
 
     /// @brief Instantiate the debouncer with a custom bounce timer
     /// @param bounceTimeMs The time in milliseconds to wait between function invocations
-    Debouncer(unsigned long bounceTimeMs);
+    explicit Debouncer(unsigned long bounceTimeMs);
 
     /// @brief Pass this method the function that you would like to run, if you need to run a method, wrap it in a lambda
     /// @tparam F The type of the function pointer, be sure this requires no arguments
@@ -43,7 +43,7 @@ class Debouncer {
       }
     }
 
-    /// @brief Bounce the running of any functions with this debouncer until it is manually reset
+    /// @brief Execute the running of any functions with this debouncer until it is manually reset
     /// @tparam F The type of the function pointer, be sure this requires no arguments
     /// @param debounceFunction The parameterless function to run if the debouncer has been reset or is in its initial state
     template<typename F>
@@ -55,7 +55,7 @@ class Debouncer {
     }
 
     /// @brief Accessor to check if this instance will execute functions
-    /// @return False if this debouncer would execute the function passed to Bounce, otherwise true
+    /// @return False if this debouncer would execute the function passed to Execute, otherwise true
     bool IsBounced();
 
     /// @brief Accessor to check if this instance has executed any functions and not been reset

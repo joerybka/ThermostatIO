@@ -9,8 +9,8 @@
 /// @brief Controller to manage tracking settings in the thermostat
 class SettingsController {
   private: 
-    Debouncer _incrementBouncer;
-    Debouncer _decrementBouncer;
+    StableDebouncer _incrementBouncer;
+    StableDebouncer _decrementBouncer;
     StableDebouncer _setHeatModeBouncer = StableDebouncer();
     PinController _upButton;
     PinController _downButton;
@@ -106,7 +106,7 @@ class SettingsController {
      * @param downButtonController The controller for the down button
      * @param modeButtonController The controller for the mode button
      */
-    SettingsController(Debouncer incrementBouncer, Debouncer decrementBouncer, PinController upButtonController,
+    SettingsController(StableDebouncer incrementBouncer, StableDebouncer decrementBouncer, PinController upButtonController,
                        PinController downButtonController, PinController modeButtonController);
 
     /**

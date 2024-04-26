@@ -4,17 +4,21 @@
 
 #include "StableDebouncer.h"
 
-StableDebouncer::StableDebouncer() : StableDebouncer(DefaultDebounceMilliseconds) { }
+StableDebouncer::StableDebouncer() : StableDebouncer(DefaultFrequencyMilliseconds) { }
 
-StableDebouncer::StableDebouncer(unsigned long bounceMs) {
-    _bounceMs = bounceMs;
+StableDebouncer::StableDebouncer(unsigned long frequencyMs) {
+    _frequencyMs = frequencyMs;
 }
 
-void StableDebouncer::SetStartBounceDelay(unsigned long bounceStartDelayMs) {
-    _bounceStartDelayMs = bounceStartDelayMs;
+void StableDebouncer::SetStartDelay(unsigned long startDelayMs) {
+    _debounceStartExecuteDelayMs = startDelayMs;
 }
 
-void StableDebouncer::SetBounceResetCooldown(unsigned long bounceResetCooldownMs) {
+void StableDebouncer::SetStopDelay(unsigned long stopDelayMs) {
+    _debounceStopExecuteDelayMs = stopDelayMs;
+}
+
+void StableDebouncer::SetResetCooldown(unsigned long bounceResetCooldownMs) {
     _bounceResetCooldownMs = bounceResetCooldownMs;
 }
 
@@ -23,5 +27,5 @@ void StableDebouncer::SetStickyBounce(bool stickyBounce) {
 }
 
 void StableDebouncer::Reset() {
-    _reset();
+    _advanceReset();
 }

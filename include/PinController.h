@@ -15,7 +15,7 @@ class PinController {
 private:
     uint8_t _pin;
     uint8_t _mode;
-    bool _inverted;
+    bool _inverted = false;
 
     IoMode _ioMode;
 
@@ -37,17 +37,15 @@ public:
     PinController(uint8_t pin, uint8_t mode);
 
     /**
-     * Initialize the pin controller, this is a light wrapper around the digital functions for arduino.
-     * @param pin The arduino pin number to control
-     * @param mode The pin mode
-     * @param inverted If inverted, all logic will be reversed, up will become down, left will become right, but most importantly, pin outputs are reversed
-     */
-    PinController(uint8_t pin, uint8_t mode, bool inverted);
-
-    /**
      * You must call initialize to run the pin setup.  Output pins will be set to this controller's Off value.
      */
-     void Initialize();
+    void Initialize();
+
+    /**
+     * Flip the current inversion setting
+     * @return The new inversion setting
+     */
+    bool Invert();
 
     /**
      * Checks if the pin set to high in write mode or if it is high in read mode
