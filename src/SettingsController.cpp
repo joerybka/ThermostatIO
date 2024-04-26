@@ -27,7 +27,7 @@ SettingsController::SettingsController(StableDebouncer incrementBouncer, StableD
    _downButton(downButtonController), _modeButton(modeButtonController) {
     _setHeatModeBouncer.SetStickyBounce(true);
     _setHeatModeBouncer.SetStartDelay(10);
-//    _setHeatModeBouncer.SetStopDelay(10);
+    _setHeatModeBouncer.SetStopDelay(10);
     _setHeatModeBouncer.SetResetCooldown(10);
 }
 
@@ -49,7 +49,7 @@ void SettingsController::DecrementSetTempC() {
 
 void SettingsController::ToggleHeatMode() {
   auto wrapper = [this]() { _heatModeToggle(); };
-    _setHeatModeBouncer.Execute(wrapper);
+  _setHeatModeBouncer.Execute(wrapper);
 }
 
 void SettingsController::LoopHandler() {

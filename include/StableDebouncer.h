@@ -128,6 +128,18 @@ private:
     /// is the amount of time since the last successful reset past the cooldown
     bool _isPastResetCooldown() { return (millis() - _lastResetMs) >= _bounceResetCooldownMs; }
 
+    static const char* _getStableDebouncerStateString(StableDebouncerState state) {
+        switch(state) {
+            case Idle: return "Idle";
+            case StartDelay: return "Start Delay";
+            case Executing: return "Executing";
+            case Executed: return "Executed";
+            case StopDelay: return "Stop Delay";
+            case ResetCooldown: return "Reset Cooldown";
+            default: return "Unknown";
+        }
+    }
+
     /**
      * Advance the state of the execution status through the flow using the "execute" request
      * parameter
@@ -173,22 +185,25 @@ private:
                 _state = Idle;
                 _debounceStartExecuteRequestMs = 0;
                 break;
-            case Executing:  // if we are executing or have executed, initiate stop delay
+            case Executing:  // if we are executing or have executed, initiate reset cooldown, go to stop delay, or reset to idle
             case Executed:
-                _state = StopDelay;
                 _debounceStopExecuteRequestMs = millis();
-                break;
-            case StopDelay:  // if we are finished with delay reset
-                if(_isPastStopDelay()) {
-                    _lastResetMs = millis();
-                    _debounceStartExecuteRequestMs = 0;
-                    _debounceStopExecuteRequestMs = 0;
+                if(_isPastStopDelay()){
+                    _resetTimers();
                     _state = _isPastResetCooldown() ? Idle : ResetCooldown;
                 }
+                else {
+                    _state = StopDelay;
+                }
+                break;
+            case StopDelay:  // if we are finished with delay, reset
+                if(!_isPastStopDelay()) return;
+
+                _resetTimers();
+                _state = _isPastResetCooldown() ? Idle : ResetCooldown;
                 break;
             case ResetCooldown:
                 if(_isPastResetCooldown()) {
-                    _lastResetMs = 0;
                     _state = Idle;
                 }
                 break;
@@ -219,6 +234,13 @@ private:
      * Set our last reset timestamp
      */
     void _setReset() {
+        _lastResetMs = millis();
+    }
+
+    void _resetTimers() {
+        _debounceStartExecuteRequestMs = 0;
+        _debounceStopExecuteRequestMs = 0;
+        _lastExecutionMs = 0;
         _lastResetMs = millis();
     }
 };

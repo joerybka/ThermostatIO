@@ -27,5 +27,6 @@ void StableDebouncer::SetStickyBounce(bool stickyBounce) {
 }
 
 void StableDebouncer::Reset() {
-    _advanceReset();
+    if(_state != Idle)
+        _advanceReset();
 }
