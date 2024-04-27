@@ -85,7 +85,7 @@ SensorController sensorController = SensorController(sensorReadBounceMs);
 HvacController hvacController = HvacController(hvacChangeDebounceMs, PIN_LED_COOL, PIN_LED_HEAT, PIN_LED_FAN);
 
 /// @brief debouncer to control the frequency of writing to the serial console
-Debouncer writeDebouncer = Debouncer(writeDebounceMs);
+StableDebouncer writeDebouncer = StableDebouncer(writeDebounceMs);
 
 // status writer
 void statusWriter() {
@@ -120,7 +120,7 @@ void setup() {
 #if defined(PIN_I2C_SCL) && defined(PIN_I2C_SDA)
   Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL, 100000);
 #else
-  Wire.begin()
+  Wire.begin();
 #endif
 
   // run any initializers
@@ -139,5 +139,5 @@ void loop() {
   hvacController.LoopHandler(sensorController, settingsController);
 
   // write status on a debounced interval
-  writeDebouncer.Bounce(statusWriter);
+  writeDebouncer.Execute(statusWriter);
 }
