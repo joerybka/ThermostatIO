@@ -1,5 +1,5 @@
 #include "ThermostatModes.h"
-#include "Debouncer.h"
+#include "StableDebouncer.h"
 #include "SettingsController.h"
 #include "SensorController.h"
 
@@ -9,7 +9,7 @@
 /// @brief Controller for the HVAC relays
 class HvacController {
   /// @brief HVAC change debouncer to prevent damage to HVAC equipment
-  Debouncer _hvacChangeDebouncer;
+  StableDebouncer _hvacChangeDebouncer;
 
   /// @brief Flag for if the cooling system is on
   bool _isCoolOn = false;

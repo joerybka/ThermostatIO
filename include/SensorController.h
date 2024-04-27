@@ -1,4 +1,4 @@
-#include "Debouncer.h"
+#include "StableDebouncer.h"
 #include "SHT31.h"
 
 #ifndef SENSOR_CONTROLLER_H
@@ -8,7 +8,7 @@
 class SensorController {
   private:
     /// @brief Debouncer for reading the temperature sensor
-    Debouncer _readSensorDebouncer;
+    StableDebouncer _readSensorDebouncer;
 
     /// @brief The sensor object
     SHT31 _sensor;
@@ -44,8 +44,8 @@ class SensorController {
     /// @param sensorReadBounceMs The number of milliseconds to wait between reads of the sensor
     SensorController(unsigned long sensorReadBounceMs);
 
-    /// Initializer with specified settings
-    void Initialize(int sdaPin, int sclPin, uint32_t clock);
+    /// Initializer, be sure Wire has been configured before calling this
+    void Initialize();
 
     /// @brief Handler for executing looping behavior
     void LoopHandler();

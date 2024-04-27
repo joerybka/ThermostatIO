@@ -2,7 +2,6 @@
 #include "Wire.h"
 #include "SHT31.h"
 
-#include "Debouncer.h"
 #include "StableDebouncer.h"
 #include "SettingsController.h"
 #include "SensorController.h"
@@ -41,9 +40,6 @@
 #define PIN_LED_FAN 2
 
 #else
-#define PIN_I2C_SCL 3
-#define PIN_I2C_SDA 2
-
 #define PIN_BUTTON_UP 21
 #define PIN_BUTTON_DOWN 20
 #define PIN_TEMP_MODE_TOGGLE 19
@@ -124,8 +120,14 @@ void setup() {
   Serial.print("Library version: \t");
   Serial.println(SHT31_LIB_VERSION);
 
+#if defined(PIN_I2C_SCL) && defined(PIN_I2C_SDA)
+  Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL, 100000);
+#else
+  Wire.begin()
+#endif
+
   // run any initializers
-  sensorController.Initialize(PIN_I2C_SDA, PIN_I2C_SCL, 100000);
+  sensorController.Initialize();
   settingsController.Initialize();
 
   // print starting status to the console
