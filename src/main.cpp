@@ -26,9 +26,6 @@
 #define PIN_LED_FAN 6
 
 #elif SEEED
-#define PIN_I2C_SCL 5
-#define PIN_I2C_SDA 4
-
 #define PIN_BUTTON_UP 10
 #define PIN_BUTTON_DOWN 9
 #define PIN_TEMP_MODE_TOGGLE 8
